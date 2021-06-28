@@ -1,0 +1,52 @@
+# Setting commands and paths.
+CARGO=@CARGO@
+RUSTC=@RUSTC@
+PYTHON=@PYTHON@
+PIP=@PIP@
+MATURIN=@MATURIN@
+
+WHEELS_DIR=./target/wheels
+
+
+# Build
+.PHONY: python_native_extension
+python_native_extension:
+	${MATURIN} build --release
+	-[ -f "`pwd`/src/fibonacci_number.so" ] && rm -f "`pwd`/src/fibonacci_number.so";
+	ln -s "`pwd`/target/release/libfibonacci_number.so" ./src/fibonacci_number.so;
+
+
+# Profiling
+.PHONY: profiling
+profiling:
+	cd src && ${PYTHON} -m cProfile fibonacci_accelerate.py profiling
+	cd src && ${PYTHON} -m cProfile fibonacci_pure_python.py profiling
+
+
+# Install .whl
+.PHONY: install
+install:
+	${PIP} install --user ${WHEELS_DIR}/*.whl
+
+
+# Uninstall .whl
+.PHONY: uninstall
+uninstall:
+	${PIP} uninstall fibonacci_number
+
+
+# Cleanup working dir.
+.PHONY: clean
+clean:
+	${CARGO} clean;
+	-rm -f "`pwd`/src/fibonacci_number.so"
+
+.PHONY: distclean
+distclean:
+	${CARGO} clean
+	-rm -f "`pwd`/src/fibonacci_number.so"
+	-rm -fr autom4te.cache
+	-rm -f config.log
+	-rm -f config.status
+	-rm -f configure
+	-rm -f Makefile
