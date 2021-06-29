@@ -55,12 +55,12 @@ Then following are shown
 
 ```shell
 $ make profiling
-cd src && python3 -m cProfile fibonacci_accelerate.py profiling
+cd examples && python3 -m cProfile fibonacci_accelerate.py profiling
          110 function calls in 220.439 seconds
 
 ... (snip) ...
 
-cd src && python3 -m cProfile fibonacci_pure_python.py profiling
+cd examples && python3 -m cProfile fibonacci_pure_python.py profiling
          40730028398 function calls (6144 primitive calls) in 36677.990 seconds
 
 ... (snip) ...
@@ -69,7 +69,7 @@ cd src && python3 -m cProfile fibonacci_pure_python.py profiling
 
 # Try native Python extension without install .whl
 
-After build, `cd src` and run a Python interpreter.
+After build, `cd examples` and run a Python interpreter.
 [IPython](https://pypi.org/project/ipython/) is highly recommended.
 
 ```ipython

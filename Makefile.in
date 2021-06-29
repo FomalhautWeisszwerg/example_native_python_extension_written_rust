@@ -12,15 +12,17 @@ WHEELS_DIR=./target/wheels
 .PHONY: python_native_extension
 python_native_extension:
 	${MATURIN} build --release
-	-[ -f "`pwd`/src/fibonacci_number.so" ] && rm -f "`pwd`/src/fibonacci_number.so";
-	ln -s "`pwd`/target/release/libfibonacci_number.so" ./src/fibonacci_number.so;
+	if [ -f "`pwd`/src/fibonacci_number.so" ]; then \
+		rm -f "`pwd`/examples/fibonacci_number.so";  \
+	fi;
+	ln -s "`pwd`/target/release/libfibonacci_number.so" ./examples/fibonacci_number.so;
 
 
 # Profiling
 .PHONY: profiling
 profiling:
-	cd src && ${PYTHON} -m cProfile fibonacci_accelerate.py profiling
-	cd src && ${PYTHON} -m cProfile fibonacci_pure_python.py profiling
+	cd examples && ${PYTHON} -m cProfile fibonacci_accelerate.py profiling
+	cd examples && ${PYTHON} -m cProfile fibonacci_pure_python.py profiling
 
 
 # Install .whl
@@ -39,12 +41,12 @@ uninstall:
 .PHONY: clean
 clean:
 	${CARGO} clean;
-	-rm -f "`pwd`/src/fibonacci_number.so"
+	-rm -f "`pwd`/examples/fibonacci_number.so"
 
 .PHONY: distclean
 distclean:
 	${CARGO} clean
-	-rm -f "`pwd`/src/fibonacci_number.so"
+	-rm -f "`pwd`/examples/fibonacci_number.so"
 	-rm -fr autom4te.cache
 	-rm -f config.log
 	-rm -f config.status
